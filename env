@@ -1,0 +1,9 @@
+# .env — MongoDB on Dokploy (Starter)
+# Place this file next to docker-compose.yml in Dokploy (or paste values into Dokploy Env/Secrets).
+
+MONGO_ROOT_USER=root
+MONGO_INITDB_ROOT_USERNAME=root
+MONGO_ROOT_PASS=hwbGKgVbMPRnoEVz=jgRJ+1d
+
+APP_DB_USER=appuser
+APP_DB_PASS=9oQBdNPe6sumA!$Gmhalhvz_
