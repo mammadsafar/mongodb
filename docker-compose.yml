@@ -1,0 +1,39 @@
+version: "3.9"
+
+services:
+  mongodb:
+    image: mongo:7-jammy
+    container_name: mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+      MONGO_INITDB_DATABASE: admin
+      APP_DB_USER: ${APP_DB_USER}
+      APP_DB_PASS: ${APP_DB_PASS}
+    volumes:
+      - mongo_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+      - ./init/:/docker-entrypoint-initdb.d:ro
+    command: ["mongod", "--config", "/etc/mongod.conf"]
+    healthcheck:
+      test: >
+        bash -lc 'mongosh --quiet
+        --username "$$MONGO_INITDB_ROOT_USERNAME"
+        --password "$$MONGO_INITDB_ROOT_PASSWORD"
+        --authenticationDatabase admin
+        --eval "db.runCommand({ ping: 1 })" || exit 1'
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    networks:
+      - shared-net
+
+volumes:
+  mongo_data:
+
+networks:
+  shared-net:
+    external: true
