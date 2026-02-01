@@ -1,8 +1,6 @@
-version: "3.9"
-
 services:
   mongodb:
-    image: mongo:4.4
+    image: mongo:4.4  # به جای mongo:5.0 از mongo:4.4 استفاده کنید
     container_name: mongodb
     restart: unless-stopped
     ports:
@@ -31,6 +29,7 @@ services:
       retries: 30
     networks:
       - shared-net
+
 
 volumes:
   mongo_data:
