@@ -2,15 +2,15 @@ version: "3.9"
 
 services:
 
-  mongo1:
+  mongodb:
     image: "mongo:4.4.18"
-    container_name: "mongo1"
+    container_name: "mongodb"
     restart: unless-stopped
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
     volumes:
-      - mongo1_data:/data/db
+      - mongo_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
       - ./keyfile:/etc/mongo/keyfile:ro
     command:
@@ -60,7 +60,7 @@ services:
       - mongo-net
 
 volumes:
-  mongo1_data:
+  mongo_data:
   mongo2_data:
   mongo3_data:
 
