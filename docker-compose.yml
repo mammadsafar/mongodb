@@ -12,7 +12,7 @@ services:
     volumes:
       - mongo1_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
-      - ./mongo-keyfile:/etc/mongo/keyfile:ro
+      - ./keyfile:/etc/mongo/keyfile:ro
     command:
       [
         "bash", "-lc",
@@ -31,7 +31,7 @@ services:
     volumes:
       - mongo2_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
-      - ./mongo-keyfile:/etc/mongo/keyfile:ro
+      - ./keyfile:/etc/mongo/keyfile:ro
     command:
       [
         "bash", "-lc",
@@ -50,7 +50,7 @@ services:
     volumes:
       - mongo3_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
-      - ./mongo-keyfile:/etc/mongo/keyfile:ro
+      - ./keyfile:/etc/mongo/keyfile:ro
     command:
       [
         "bash", "-lc",
