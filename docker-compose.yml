@@ -68,3 +68,5 @@ volumes:
 networks:
   mongo-net:
     driver: bridge
+  dokploy-network:
+    external: true
