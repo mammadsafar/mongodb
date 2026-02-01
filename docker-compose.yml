@@ -17,7 +17,7 @@ services:
       - mongo_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
       - ./init/:/docker-entrypoint-initdb.d:ro
-    command: ["mongod", "--config", "/etc/mongod.conf"]
+    command: ["mongod", "--replSet", "rs0", "--bind_ip_all", "--config", "/etc/mongod.conf"]
     healthcheck:
       test: >
         bash -lc 'mongosh --quiet
