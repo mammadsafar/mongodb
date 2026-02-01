@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   mongodb:
-    image: mongo:4.4  # استفاده از MongoDB نسخه 4.4
+    image: mongo:4.4
     container_name: mongodb
     restart: unless-stopped
     ports:
@@ -11,24 +11,46 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
       MONGO_INITDB_DATABASE: admin
-      APP_DB_USER: ${APP_DB_USER}
-      APP_DB_PASS: ${APP_DB_PASS}
     volumes:
       - mongo_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
       - ./init/:/docker-entrypoint-initdb.d:ro
-      - ./keyfile:/etc/mongo/keyfile:ro   # مسیر فایل keyfile
+      - ./keyfile:/etc/mongo/keyfile:ro
     command: ["mongod", "--replSet", "rs0", "--auth", "--keyFile", "/etc/mongo/keyfile", "--config", "/etc/mongod.conf"]
-    healthcheck:
-      test: >
-        bash -lc 'mongosh --quiet
-        --username "$$MONGO_INITDB_ROOT_USERNAME"
-        --password "$$MONGO_INITDB_ROOT_PASSWORD"
-        --authenticationDatabase admin
-        --eval "db.runCommand({ ping: 1 })" || exit 1'
-      interval: 10s
-      timeout: 5s
-      retries: 30
+    networks:
+      - shared-net
+
+  mongodb2:
+    image: mongo:4.4
+    container_name: mongodb2
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+      MONGO_INITDB_DATABASE: admin
+    volumes:
+      - mongo_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+      - ./init/:/docker-entrypoint-initdb.d:ro
+      - ./keyfile:/etc/mongo/keyfile:ro
+    command: ["mongod", "--replSet", "rs0", "--auth", "--keyFile", "/etc/mongo/keyfile", "--config", "/etc/mongod.conf"]
+    networks:
+      - shared-net
+
+  mongodb3:
+    image: mongo:4.4
+    container_name: mongodb3
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+      MONGO_INITDB_DATABASE: admin
+    volumes:
+      - mongo_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+      - ./init/:/docker-entrypoint-initdb.d:ro
+      - ./keyfile:/etc/mongo/keyfile:ro
+    command: ["mongod", "--replSet", "rs0", "--auth", "--keyFile", "/etc/mongo/keyfile", "--config", "/etc/mongod.conf"]
     networks:
       - shared-net
 
