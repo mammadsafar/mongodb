@@ -12,16 +12,12 @@ services:
       APP_DB_PASS: ${APP_DB_PASS}
     volumes:
       - mongo_data:/data/db
-      - keyfile_volume:/tmp/keyfile
       - ./mongod.conf:/etc/mongod.conf:ro
+      - ./keyfile/mongo-keyfile:/etc/mongo/keyfile
     command:
       [
         "bash", "-lc",
-        # copy keyfile into correct path
-        "cp /tmp/keyfile/mongo-keyfile /etc/mongo/keyfile && \
-         chmod 400 /etc/mongo/keyfile && \
-         chown mongodb:mongodb /etc/mongo/keyfile && \
-         exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
+        "chmod 400 /etc/mongo/keyfile && chown mongodb:mongodb /etc/mongo/keyfile && exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
       ]
     networks:
       - mongo-net
@@ -35,15 +31,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
     volumes:
       - mongo2_data:/data/db
-      - keyfile_volume:/tmp/keyfile
       - ./mongod.conf:/etc/mongod.conf:ro
+      - ./keyfile/mongo-keyfile:/etc/mongo/keyfile
     command:
       [
         "bash", "-lc",
-        "cp /tmp/keyfile/mongo-keyfile /etc/mongo/keyfile && \
-         chmod 400 /etc/mongo/keyfile && \
-         chown mongodb:mongodb /etc/mongo/keyfile && \
-         exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
+        "chmod 400 /etc/mongo/keyfile && chown mongodb:mongodb /etc/mongo/keyfile && exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
       ]
     networks:
       - mongo-net
@@ -57,15 +50,12 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
     volumes:
       - mongo3_data:/data/db
-      - keyfile_volume:/tmp/keyfile
       - ./mongod.conf:/etc/mongod.conf:ro
+      - ./keyfile/mongo-keyfile:/etc/mongo/keyfile
     command:
       [
         "bash", "-lc",
-        "cp /tmp/keyfile/mongo-keyfile /etc/mongo/keyfile && \
-         chmod 400 /etc/mongo/keyfile && \
-         chown mongodb:mongodb /etc/mongo/keyfile && \
-         exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
+        "chmod 400 /etc/mongo/keyfile && chown mongodb:mongodb /etc/mongo/keyfile && exec mongod --config /etc/mongod.conf --replSet rs0 --keyFile /etc/mongo/keyfile"
       ]
     networks:
       - mongo-net
@@ -74,7 +64,6 @@ volumes:
   mongo_data:
   mongo2_data:
   mongo3_data:
-  keyfile_volume:
 
 networks:
   mongo-net:
