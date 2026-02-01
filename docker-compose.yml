@@ -1,47 +1,56 @@
 version: "3.9"
 
 services:
-  mongodb:
-    image: mongo:4.4.18
-    container_name: mongodb
+  mongo1:
+    image: "mongo:4.4.18"
+    container_name: "mongo1"
     restart: unless-stopped
-    ports:
-      - "27017:27017"
     environment:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
-      MONGO_INITDB_DATABASE: admin
-      APP_DB_USER: ${APP_DB_USER}
-      APP_DB_PASS: ${APP_DB_PASS}
     volumes:
-      - mongo_data:/data/db
+      - mongo1_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
-      - ./init/:/docker-entrypoint-initdb.d:ro
       - ./mongo-keyfile:/etc/mongo/keyfile:ro
-    command:
-      [
-        "mongod",
-        "--replSet", "rs0",
-        "--bind_ip_all",
-        "--keyFile", "/etc/mongo/keyfile",
-        "--config", "/etc/mongod.conf"
-      ]
-    healthcheck:
-      test: >
-        bash -lc 'mongosh --quiet
-        --username "$$MONGO_INITDB_ROOT_USERNAME"
-        --password "$$MONGO_INITDB_ROOT_PASSWORD"
-        --authenticationDatabase admin
-        --eval "db.runCommand({ ping: 1 })" || exit 1'
-      interval: 10s
-      timeout: 5s
-      retries: 30
+    command: ["mongod", "--config", "/etc/mongod.conf", "--replSet", "rs0"]
     networks:
-      - shared-net
+      - mongo-net
+
+  mongo2:
+    image: "mongo:4.4.18"
+    container_name: "mongo2"
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+    volumes:
+      - mongo2_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+      - ./mongo-keyfile:/etc/mongo/keyfile:ro
+    command: ["mongod", "--config", "/etc/mongod.conf", "--replSet", "rs0"]
+    networks:
+      - mongo-net
+
+  mongo3:
+    image: "mongo:4.4.18"
+    container_name: "mongo3"
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASS}
+    volumes:
+      - mongo3_data:/data/db
+      - ./mongod.conf:/etc/mongod.conf:ro
+      - ./mongo-keyfile:/etc/mongo/keyfile:ro
+    command: ["mongod", "--config", "/etc/mongod.conf", "--replSet", "rs0"]
+    networks:
+      - mongo-net
 
 volumes:
-  mongo_data:
+  mongo1_data:
+  mongo2_data:
+  mongo3_data:
 
 networks:
-  shared-net:
-    external: true
+  mongo-net:
+    driver: bridge
