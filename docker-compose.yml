@@ -17,7 +17,8 @@ services:
       - mongo_data:/data/db
       - ./mongod.conf:/etc/mongod.conf:ro
       - ./init/:/docker-entrypoint-initdb.d:ro
-    command: ["mongod", "--replSet", "rs0", "--config", "/etc/mongod.conf"]
+      - ./keyfile:/etc/mongo/keyfile:ro   # اضافه کردن keyfile
+    command: ["mongod", "--replSet", "rs0", "--auth", "--keyFile", "/etc/mongo/keyfile", "--config", "/etc/mongod.conf"]
     healthcheck:
       test: >
         bash -lc 'mongosh --quiet
@@ -30,8 +31,6 @@ services:
       retries: 30
     networks:
       - shared-net
-
-  # سایر سرویس‌ها (اگر دارید)
 
 volumes:
   mongo_data:
